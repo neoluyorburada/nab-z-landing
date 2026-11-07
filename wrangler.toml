@@ -1,0 +1,6 @@
+name = "nab-z-landing"
+compatibility_date = "2024-09-19"
+
+[assets]
+directory = "."
+not_found_handling = "single-page-application"
