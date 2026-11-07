@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nabız — Sitenizin nabzını tutar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0B1220;
+    --surface: #141B2E;
+    --surface-2: #1B2438;
+    --text: #EDF1F7;
+    --text-dim: #8A93A6;
+    --pulse: #2EE6A6;
+    --pulse-dim: #1C8F68;
+    --border: #232D45;
+    color-scheme: dark;
+  }
+  :root:not([data-theme="light"]) { }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      --bg: #F6F7FA;
+      --surface: #FFFFFF;
+      --surface-2: #EEF1F6;
+      --text: #121826;
+      --text-dim: #5B6472;
+      --pulse: #0E9A6C;
+      --pulse-dim: #0B7A56;
+      --border: #DDE2EA;
+      color-scheme: light;
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #F6F7FA; --surface: #FFFFFF; --surface-2: #EEF1F6;
+    --text: #121826; --text-dim: #5B6472; --pulse: #0E9A6C;
+    --pulse-dim: #0B7A56; --border: #DDE2EA; color-scheme: light;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 0 24px; }
+  h1, h2, .brand { font-family: 'Space Grotesk', sans-serif; }
+
+  nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 28px 0;
+  }
+  .brand { font-weight: 700; font-size: 1.15rem; letter-spacing: -0.01em; }
+  .brand span { color: var(--pulse); }
+  .nav-cta {
+    font-size: 0.9rem; color: var(--text); text-decoration: none;
+    border: 1px solid var(--border); padding: 8px 16px; border-radius: 7px;
+    transition: border-color 0.2s ease;
+  }
+  .nav-cta:hover { border-color: var(--pulse); }
+
+  .hero { text-align: center; padding: 48px 0 20px; }
+  .hero h1 {
+    font-size: clamp(2.2rem, 5.5vw, 3.4rem);
+    line-height: 1.12; font-weight: 700; letter-spacing: -0.02em;
+    margin: 0 0 18px; max-width: 14ch; margin-left: auto; margin-right: auto;
+  }
+  .hero p {
+    color: var(--text-dim); font-size: 1.08rem; max-width: 46ch;
+    margin: 0 auto 32px; line-height: 1.55;
+  }
+  .cta-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--pulse); color: #06130D; font-weight: 600;
+    border: none; padding: 13px 24px; border-radius: 7px; font-size: 0.95rem;
+    cursor: pointer; font-family: inherit; text-decoration: none; display: inline-block;
+    transition: transform 0.15s ease;
+  }
+  .btn-primary:hover { transform: translateY(-1px); }
+  .btn-ghost {
+    background: transparent; color: var(--text); border: 1px solid var(--border);
+    padding: 13px 24px; border-radius: 7px; font-size: 0.95rem; font-family: inherit;
+    text-decoration: none; display: inline-block;
+  }
+
+  .pulse-stage {
+    margin: 44px auto 0; max-width: 760px; background: var(--surface);
+    border: 1px solid var(--border); border-radius: 12px; padding: 28px 20px 18px;
+  }
+  .pulse-head {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 14px; font-size: 0.85rem; color: var(--text-dim);
+  }
+  .status-dot {
+    width: 8px; height: 8px; border-radius: 50%; background: var(--pulse);
+    display: inline-block; margin-right: 7px;
+    animation: blink 1.8s ease-in-out infinite;
+  }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+  svg#pulseline { width: 100%; height: 110px; display: block; overflow: visible; }
+  .pulse-path {
+    fill: none; stroke: var(--pulse); stroke-width: 2.5;
+    stroke-linecap: round; stroke-linejoin: round;
+    stroke-dasharray: 1400; stroke-dashoffset: 1400;
+    animation: draw 2.6s ease-out forwards, glide 3.4s linear 2.6s infinite;
+  }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+  @keyframes glide {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  .pulse-foot {
+    display: flex; gap: 28px; margin-top: 10px; font-size: 0.82rem;
+    color: var(--text-dim); flex-wrap: wrap;
+  }
+  .pulse-foot b { color: var(--text); font-weight: 600; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pulse-path { animation: none; stroke-dashoffset: 0; }
+    .status-dot { animation: none; }
+  }
+
+  .features {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+    margin: 72px 0 60px;
+  }
+  .feature {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 22px 20px;
+  }
+  .feature .num { color: var(--pulse); font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 0.85rem; }
+  .feature h3 { font-size: 1.02rem; margin: 10px 0 8px; font-weight: 600; }
+  .feature p { color: var(--text-dim); font-size: 0.92rem; line-height: 1.5; margin: 0; }
+
+  .how { padding: 10px 0 70px; }
+  .how h2 { font-size: 1.6rem; margin-bottom: 30px; font-weight: 600; }
+  .steps { display: flex; flex-direction: column; gap: 0; }
+  .step {
+    display: flex; gap: 18px; padding: 18px 0; border-bottom: 1px solid var(--border);
+  }
+  .step:last-child { border-bottom: none; }
+  .step-mark {
+    width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid var(--pulse);
+    color: var(--pulse); display: flex; align-items: center; justify-content: center;
+    font-size: 0.8rem; font-weight: 600; flex-shrink: 0; font-family: 'Space Grotesk', sans-serif;
+  }
+  .step-text h4 { margin: 2px 0 4px; font-size: 0.98rem; font-weight: 600; }
+  .step-text p { margin: 0; color: var(--text-dim); font-size: 0.9rem; line-height: 1.5; }
+
+  .closing {
+    text-align: center; padding: 50px 0 80px; border-top: 1px solid var(--border);
+  }
+  .closing h2 { font-size: 1.7rem; margin: 0 0 12px; font-weight: 600; }
+  .closing p { color: var(--text-dim); margin: 0 0 26px; }
+
+  footer {
+    border-top: 1px solid var(--border); padding: 22px 0 calc(22px + env(safe-area-inset-bottom, 0px));
+    text-align: center; color: var(--text-dim); font-size: 0.82rem;
+  }
+
+  @media (max-width: 680px) {
+    .features { grid-template-columns: 1fr; }
+    .pulse-foot { gap: 16px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <div class="brand">nabız<span>.</span></div>
+    <a class="nav-cta" href="#basla">Ücretsiz dene</a>
+  </nav>
+
+  <section class="hero">
+    <h1>Siteniz çöktüğünde, siz ilk öğrenen olun.</h1>
+    <p>Nabız; sitenizi, API'lerinizi ve sunucularınızı sürekli izler, bir şey ters giderse 20 saniye içinde haber verir.</p>
+    <div class="cta-row">
+      <a class="btn-primary" href="#basla">14 gün ücretsiz başla</a>
+      <a class="btn-ghost" href="#nasil">Nasıl çalışır</a>
+    </div>
+
+    <div class="pulse-stage">
+      <div class="pulse-head">
+        <span><span class="status-dot"></span>api.urunun.com — çalışıyor</span>
+        <span>99.98% · son 30 gün</span>
+      </div>
+      <svg id="pulseline" viewBox="0 0 700 110" preserveAspectRatio="none">
+        <path class="pulse-path" d="M0,55 L120,55 L138,55 L150,15 L162,95 L174,55 L220,55 L700,55 L820,55 L838,15 L850,95 L862,55 L1220,55 L1700,55 L1820,55 L1838,15 L1850,95 L1862,55 L1920,55"/>
+      </svg>
+      <div class="pulse-foot">
+        <span>Yanıt süresi <b>142ms</b></span>
+        <span>Çalışma süresi <b>62 gün</b></span>
+        <span>Son kontrol <b>8 saniye önce</b></span>
+      </div>
+    </div>
+  </section>
+
+  <section class="features">
+    <div class="feature">
+      <div class="num">01</div>
+      <h3>20 saniyede bir kontrol</h3>
+      <p>Dünyanın farklı noktalarından sitenize istek atar, gerçek kullanıcı gecikmesini ölçeriz.</p>
+    </div>
+    <div class="feature">
+      <div class="num">02</div>
+      <h3>Anında bildirim</h3>
+      <p>SMS, e-posta veya Slack üzerinden, sorun büyümeden ekibinize ulaşır.</p>
+    </div>
+    <div class="feature">
+      <div class="num">03</div>
+      <h3>Sade geçmiş kaydı</h3>
+      <p>Hangi gün, kaç dakika kesinti yaşandığını tek bakışta görün.</p>
+    </div>
+  </section>
+
+  <section class="how" id="nasil">
+    <h2>Üç adımda kurulum</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-mark">1</div>
+        <div class="step-text">
+          <h4>Adresini ekle</h4>
+          <p>İzlemek istediğiniz site veya API adresini yapıştırın.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-mark">2</div>
+        <div class="step-text">
+          <h4>Kontrol sıklığını seç</h4>
+          <p>20 saniyeden 5 dakikaya kadar, size uygun aralığı belirleyin.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-mark">3</div>
+        <div class="step-text">
+          <h4>Bildirimi bağla</h4>
+          <p>E-posta, SMS veya Slack'ten birini seçin, Nabız gerisini halleder.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="closing" id="basla">
+    <h2>Sitenizin nabzını hemen tutmaya başlayın</h2>
+    <p>Kredi kartı gerekmez. 14 gün boyunca tüm özellikler açık.</p>
+    <a class="btn-primary" href="#">Ücretsiz hesap oluştur</a>
+  </section>
+</div>
+
+<footer>
+  © 2026 Nabız — bu bir deneme/tanıtım sayfasıdır.
+</footer>
+</body>
+</html>
